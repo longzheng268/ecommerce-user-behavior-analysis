@@ -4,8 +4,6 @@
 """
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings("ignore")
@@ -14,9 +12,10 @@ from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 import os
 
-plt.rcParams["font.sans-serif"] = ["SimHei", "WenQuanYi Micro Hei", "DejaVu Sans"]
-plt.rcParams["axes.unicode_minus"] = False
-OUTPUT_DIR = "output"
+import config
+from utils.visualization import setup_chinese_fonts, save_chart
+setup_chinese_fonts()
+
 
 
 def arima_forecast(df_behavior, df_orders):
@@ -108,9 +107,9 @@ def arima_forecast(df_behavior, df_orders):
     axes[1, 1].set_title("残差PACF")
 
     plt.tight_layout()
-    plt.savefig(f"{OUTPUT_DIR}/05_arima_forecast.png", dpi=150)
+    plt.savefig(f"{config.config.OUTPUT_DIR}/05_arima_forecast.png", dpi=150)
     plt.close()
-    print(f"\n✅ 图表已保存: {OUTPUT_DIR}/05_arima_forecast.png")
+    print(f"\n✅ 图表已保存: {config.OUTPUT_DIR}/05_arima_forecast.png")
 
     # 月度趋势预测报告
     monthly = daily_purchases.resample("ME").sum()

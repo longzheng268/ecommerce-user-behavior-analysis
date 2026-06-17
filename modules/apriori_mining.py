@@ -4,17 +4,16 @@
 """
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
 from mlxtend.frequent_patterns import apriori, association_rules
 from mlxtend.preprocessing import TransactionEncoder
 import os
 
-plt.rcParams["font.sans-serif"] = ["SimHei", "WenQuanYi Micro Hei", "DejaVu Sans"]
-plt.rcParams["axes.unicode_minus"] = False
-OUTPUT_DIR = "output"
+import config
+from utils.visualization import setup_chinese_fonts, save_chart
+setup_chinese_fonts()
+
 
 
 def apriori_mining(df_orders, df_products):
@@ -104,8 +103,8 @@ def apriori_mining(df_orders, df_products):
         axes[2].text(0.5, 0.5, "No rules found", ha="center")
 
     plt.tight_layout()
-    plt.savefig(f"{OUTPUT_DIR}/03_apriori_rules.png", dpi=150)
+    plt.savefig(f"{config.config.OUTPUT_DIR}/03_apriori_rules.png", dpi=150)
     plt.close()
-    print(f"\n✅ 图表已保存: {OUTPUT_DIR}/03_apriori_rules.png")
+    print(f"\n✅ 图表已保存: {config.OUTPUT_DIR}/03_apriori_rules.png")
 
     return rules if len(rules) > 0 else pd.DataFrame()

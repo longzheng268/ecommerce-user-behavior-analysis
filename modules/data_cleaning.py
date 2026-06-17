@@ -6,17 +6,15 @@
 """
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-plt.rcParams["font.sans-serif"] = ["SimHei", "WenQuanYi Micro Hei", "DejaVu Sans"]
-plt.rcParams["axes.unicode_minus"] = False
+import config
+from utils.visualization import setup_chinese_fonts, save_chart
+setup_chinese_fonts()
 
-OUTPUT_DIR = "output"
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+
 
 
 def load_and_clean():
@@ -117,9 +115,9 @@ def load_and_clean():
     axes[2].tick_params(axis="x", rotation=45)
 
     plt.tight_layout()
-    plt.savefig(f"{OUTPUT_DIR}/01_data_cleaning.png", dpi=150)
+    plt.savefig(f"{config.config.OUTPUT_DIR}/01_data_cleaning.png", dpi=150)
     plt.close()
-    print(f"\n✅ 图表已保存: {OUTPUT_DIR}/01_data_cleaning.png")
+    print(f"\n✅ 图表已保存: {config.OUTPUT_DIR}/01_data_cleaning.png")
 
     return df_users, df_products, df_behavior, df_orders, df_campaigns, interaction_matrix
 

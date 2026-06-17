@@ -4,8 +4,6 @@
 """
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler
@@ -14,9 +12,10 @@ from sklearn.decomposition import PCA
 from sklearn.metrics import silhouette_score
 import os
 
-plt.rcParams["font.sans-serif"] = ["SimHei", "WenQuanYi Micro Hei", "DejaVu Sans"]
-plt.rcParams["axes.unicode_minus"] = False
-OUTPUT_DIR = "output"
+import config
+from utils.visualization import setup_chinese_fonts, save_chart
+setup_chinese_fonts()
+
 
 
 def kmeans_clustering(df_users, df_behavior, df_orders, user_activity, rfm):
@@ -133,8 +132,8 @@ def kmeans_clustering(df_users, df_behavior, df_orders, user_activity, rfm):
     axes[1, 2].set_xlabel("平均消费(元)")
 
     plt.tight_layout()
-    plt.savefig(f"{OUTPUT_DIR}/04_kmeans_clustering.png", dpi=150, bbox_inches="tight")
+    plt.savefig(f"{config.config.OUTPUT_DIR}/04_kmeans_clustering.png", dpi=150, bbox_inches="tight")
     plt.close()
-    print(f"\n✅ 图表已保存: {OUTPUT_DIR}/04_kmeans_clustering.png")
+    print(f"\n✅ 图表已保存: {config.OUTPUT_DIR}/04_kmeans_clustering.png")
 
     return user_features, cluster_summary, cluster_names

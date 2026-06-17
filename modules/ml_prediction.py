@@ -5,8 +5,6 @@
 """
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
@@ -19,9 +17,10 @@ import warnings
 warnings.filterwarnings("ignore")
 import os
 
-plt.rcParams["font.sans-serif"] = ["SimHei", "WenQuanYi Micro Hei", "DejaVu Sans"]
-plt.rcParams["axes.unicode_minus"] = False
-OUTPUT_DIR = "output"
+import config
+from utils.visualization import setup_chinese_fonts, save_chart
+setup_chinese_fonts()
+
 
 
 def build_features(df_behavior, df_users, df_products):
@@ -175,9 +174,9 @@ def ml_prediction(df_behavior, df_users, df_products):
         axes[1, 2].set_ylabel("Loss")
 
     plt.tight_layout()
-    plt.savefig(f"{OUTPUT_DIR}/06_ml_prediction.png", dpi=150)
+    plt.savefig(f"{config.config.OUTPUT_DIR}/06_ml_prediction.png", dpi=150)
     plt.close()
-    print(f"\n✅ 图表已保存: {OUTPUT_DIR}/06_ml_prediction.png")
+    print(f"\n✅ 图表已保存: {config.OUTPUT_DIR}/06_ml_prediction.png")
 
     return {
         "rf": {"accuracy": rf_acc, "auc": rf_auc},

@@ -5,8 +5,6 @@
 """
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
@@ -14,9 +12,10 @@ import warnings
 warnings.filterwarnings("ignore")
 import os
 
-plt.rcParams["font.sans-serif"] = ["SimHei", "WenQuanYi Micro Hei", "DejaVu Sans"]
-plt.rcParams["axes.unicode_minus"] = False
-OUTPUT_DIR = "output"
+import config
+from utils.visualization import setup_chinese_fonts, save_chart
+setup_chinese_fonts()
+
 
 
 def marketing_analysis(df_behavior, df_campaigns, df_orders):
@@ -169,8 +168,8 @@ def marketing_analysis(df_behavior, df_campaigns, df_orders):
     axes[1, 1].set_xlabel("提升率(%)")
 
     plt.tight_layout()
-    plt.savefig(f"{OUTPUT_DIR}/07_marketing_ab.png", dpi=150)
+    plt.savefig(f"{config.config.OUTPUT_DIR}/07_marketing_ab.png", dpi=150)
     plt.close()
-    print(f"\n✅ 图表已保存: {OUTPUT_DIR}/07_marketing_ab.png")
+    print(f"\n✅ 图表已保存: {config.OUTPUT_DIR}/07_marketing_ab.png")
 
     return df_camp_results, best_group

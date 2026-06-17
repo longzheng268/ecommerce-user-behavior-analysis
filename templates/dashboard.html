@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电商用户行为数据分析平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- ===== Sidebar ===== -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">E</div>
+            <nav class="sidebar-nav">
+                <a href="#overview" class="active" title="概览"><i class="fas fa-chart-pie"></i></a>
+                <a href="#behavior" title="行为分析"><i class="fas fa-users"></i></a>
+                <a href="#category" title="品类分析"><i class="fas fa-tags"></i></a>
+                <a href="#rfm" title="RFM分析"><i class="fas fa-crosshairs"></i></a>
+                <a href="#cluster" title="用户聚类"><i class="fas fa-project-diagram"></i></a>
+                <a href="#arima" title="时序预测"><i class="fas fa-chart-line"></i></a>
+                <a href="#ml" title="机器学习"><i class="fas fa-brain"></i></a>
+                <a href="#marketing" title="营销效果"><i class="fas fa-bullhorn"></i></a>
+                <a href="#apriori" title="关联规则"><i class="fas fa-link"></i></a>
+            </nav>
+            <div style="margin-top:auto;">
+                <a href="#" title="设置" style="color:#6b6880;font-size:16px;"><i class="fas fa-cog"></i></a>
+            </div>
+        </aside>
+
+        <!-- ===== Main Content ===== -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-title">
+                    <h1><i class="fas fa-chart-bar" style="margin-right:8px;"></i>电商用户行为数据分析平台</h1>
+                    <span class="header-subtitle">E-Commerce User Behavior Analytics</span>
+                </div>
+                <div class="header-actions">
+                    <span class="header-badge">LIVE</span>
+                    <span class="header-time" id="current-time"></span>
+                </div>
+            </header>
+
+            <!-- Dashboard -->
+            <div class="dashboard" id="overview">
+                <!-- KPI Cards -->
+                <div class="kpi-row">
+                    <div class="kpi-card">
+                        <div class="kpi-icon"><i class="fas fa-users"></i></div>
+                        <div class="kpi-label">总用户数</div>
+                        <div class="kpi-value" id="kpi-users">--</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="kpi-label">总订单数</div>
+                        <div class="kpi-value" id="kpi-orders">--</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon"><i class="fas fa-percentage"></i></div>
+                        <div class="kpi-label">浏览→购买转化率</div>
+                        <div class="kpi-value" id="kpi-conversion">--</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon"><i class="fas fa-yen-sign"></i></div>
+                        <div class="kpi-label">平均订单金额</div>
+                        <div class="kpi-value" id="kpi-aov">--</div>
+                    </div>
+                </div>
+
+                <!-- Secondary KPIs -->
+                <div class="kpi-row" style="margin-bottom:0;">
+                    <div class="kpi-card" style="grid-column: span 2;">
+                        <div class="kpi-icon" style="background:rgba(118,75,162,0.15);color:#764ba2;"><i class="fas fa-wallet"></i></div>
+                        <div class="kpi-label">总营收</div>
+                        <div class="kpi-value" id="kpi-revenue">--</div>
+                    </div>
+                    <div class="kpi-card" style="grid-column: span 2;">
+                        <div class="kpi-icon" style="background:rgba(240,147,251,0.15);color:#f093fb;"><i class="fas fa-bag-shopping"></i></div>
+                        <div class="kpi-label">总购买次数</div>
+                        <div class="kpi-value" id="kpi-purchases">--</div>
+                    </div>
+                </div>
+
+                <!-- Section: 行为分析 -->
+                <div class="section-label" id="behavior">
+                    <i class="fas fa-chart-pie" style="color:#667eea;"></i> 行为分析
+                </div>
+                <div class="section-grid grid-2">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title"><i class="fas fa-circle-notch"></i> 行为类型分布</div>
+                                <div class="chart-subtitle">用户行为频次占比</div>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="chart-container" id="behavior-chart"></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title"><i class="fas fa-clock"></i> 24小时行为趋势</div>
+                                <div class="chart-subtitle">按小时统计行为频次</div>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="chart-container" id="hourly-chart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: 品类分析 -->
+                <div class="section-label" id="category">
+                    <i class="fas fa-tags" style="color:#667eea;"></i> 品类转化分析
+                </div>
+                <div class="section-grid grid-1">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title"><i class="fas fa-chart-bar"></i> 各品类浏览→购买转化率</div>
+                                <div class="chart-subtitle">各商品品类从浏览到购买的转化效率</div>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="chart-container" id="category-chart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: RFM分析 -->
+                <div class="section-label" id="rfm">
+                    <i class="fas fa-crosshairs" style="color:#667eea;"></i> RFM 用户价值分析
+                </div>
+                <div class="section-grid grid-1">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title"><i class="fas fa-braille"></i> RFM 散点图</div>
+                                <div class="chart-subtitle">颜色深浅代表消费金额 (Monetary)</div>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="chart-container" id="rfm-chart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: 用户聚类 -->
+                <div class="section-label" id="cluster">
+                    <i class="fas fa-project-diagram" style="color:#667eea;"></i> K-Means 用户聚类
+                </div>
+                <div class="section-grid grid-1">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title"><i class="fas fa-spider"></i> 用户群体特征雷达图</div>
+                                <div class="chart-subtitle">基于 RFM + 行为特征的多维对比</div>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="chart-container" id="cluster-chart"></div>
+                        </div>
+                        <div class="cluster-cards" id="cluster-cards"></div>
+                    </div>
+                </div>
+
+                <!-- Section: ARIMA 预测 -->
+                <div class="section-label" id="arima">
+                    <i class="fas fa-chart-line" style="color:#667eea;"></i> ARIMA 时序预测
+                </div>
+                <div class="section-grid grid-1">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title"><i class="fas fa-wave-square"></i> 购买量趋势预测</div>
+                                <div class="chart-subtitle" id="arima-info">加载中...</div>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="chart-container" id="arima-chart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: 机器学习 -->
+                <div class="section-label" id="ml">
+                    <i class="fas fa-brain" style="color:#667eea;"></i> 机器学习预测
+                </div>
+                <div class="section-grid grid-1">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title"><i class="fas fa-robot"></i> ROC 曲线对比</div>
+                                <div class="chart-subtitle">
+                                    RF 准确率: <span id="rf-accuracy">--</span>  |  
+                                    MLP 准确率: <span id="mlp-accuracy">--</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="chart-container" id="ml-chart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: 营销效果 -->
+                <div class="section-label" id="marketing">
+                    <i class="fas fa-bullhorn" style="color:#667eea;"></i> 营销活动效果
+                </div>
+                <div class="section-grid grid-1">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title"><i class="fas fa-bullseye"></i> 活动前后购买量对比</div>
+                                <div class="chart-subtitle">各营销活动期间购买量变化</div>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="chart-container" id="marketing-chart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: 关联规则 -->
+                <div class="section-label" id="apriori">
+                    <i class="fas fa-link" style="color:#667eea;"></i> 关联规则挖掘
+                </div>
+                <div class="section-grid grid-1">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title"><i class="fas fa-sitemap"></i> Top 10 关联规则</div>
+                                <div class="chart-subtitle">基于 Apriori 算法的商品关联分析</div>
+                            </div>
+                        </div>
+                        <div class="chart-body" style="min-height:auto;padding:16px;">
+                            <table class="apriori-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>前项 (Antecedents)</th>
+                                        <th>后项 (Consequents)</th>
+                                        <th>支持度</th>
+                                        <th>置信度</th>
+                                        <th>Lift</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="apriori-tbody">
+                                    <tr><td colspan="6" style="text-align:center;padding:40px;">
+                                        <div class="loading-spinner" style="position:relative;">
+                                            <div class="spinner"></div>
+                                            <span class="spinner-text">加载中...</span>
+                                        </div>
+                                    </td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <footer class="footer">
+                    <p>© 2025 电商用户行为数据分析平台  |  Powered by Flask + ECharts</p>
+                    <p style="margin-top:4px;">Data Science Project — <a href="#">Analytics Dashboard v2.0</a></p>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
