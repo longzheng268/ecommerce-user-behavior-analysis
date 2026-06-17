@@ -1,4 +1,4 @@
-<![CDATA[<div align="center">
+<div align="center">
 
 # 🛒 基于数据挖掘的电商平台用户行为分析
 
@@ -10,10 +10,12 @@
 
 </div>
 
-## 功能
+---
+
+## 📊 功能模块
 
 | 模块 | 算法 | 说明 |
-|:---|:---|:---|
+|------|------|------|
 | 数据清洗 | — | 缺失值/异常值处理，交互矩阵构建 |
 | 统计分析 | RFM | 行为分布、时段趋势、品类转化率 |
 | 关联规则 | Apriori | 商品关联关系挖掘（144条规则） |
@@ -23,60 +25,75 @@
 | 营销评估 | A/B Test | 活动效果对比 + 统计检验 |
 | 可视化大屏 | ECharts | 暗色主题交互式数据看板 |
 
-## 快速开始
+---
+
+## 🚀 快速开始
 
 ```bash
 git clone https://github.com/longzheng268/ecommerce-user-behavior-analysis.git
 cd ecommerce-user-behavior-analysis
-python3 -m venv venv && source venv/bin/activate
+
+python -m venv venv
+source venv/bin/activate   # Windows 用 venv\Scripts\activate
+
 pip install -r requirements.txt
 
-python main.py    # 命令行分析 → 生成 output/ 图表
+python main.py    # 命令行分析 → output/
 python app.py     # Web看板 → http://localhost:5000
+````
+
+---
+
+## 🧱 架构设计
+
+```
+app.py                  # Flask入口
+config.py               # 配置管理
+
+api/routes.py           # REST API（10个端点）
+
+modules/
+├── data_cleaning.py
+├── statistical_analysis.py
+├── apriori_mining.py
+├── kmeans_clustering.py
+├── arima_forecast.py
+├── ml_prediction.py
+└── marketing_analysis.py
+
+utils/
+├── data_loader.py
+└── visualization.py
+
+templates/             # 前端页面
+static/                # CSS/JS
+data/                  # 原始数据
+output/                # 输出结果
+docs/                  # 文档
 ```
 
-## 架构
+---
 
-```
-app.py                  # Flask入口（23行）
-config.py               # 集中配置
-│
-├─ api/routes.py        # RESTful API（10个端点）
-├─ modules/             # 7个分析模块
-│   ├─ data_cleaning.py
-│   ├─ statistical_analysis.py
-│   ├─ apriori_mining.py
-│   ├─ kmeans_clustering.py
-│   ├─ arima_forecast.py
-│   ├─ ml_prediction.py
-│   └─ marketing_analysis.py
-├─ utils/               # 公共工具
-│   ├─ data_loader.py   # 数据加载（缓存）
-│   └─ visualization.py # 字体/保存
-├─ templates/           # HTML大屏
-├─ static/              # CSS/JS
-├─ data/                # CSV数据
-├─ output/              # 分析图表
-└─ docs/                # 综合训练说明书
-```
+## 📈 核心结果
 
-## 核心结果
+| 指标       | 值                 |
+| -------- | ----------------- |
+| 浏览→购买转化率 | 11.30%            |
+| 关联规则数量   | 144               |
+| 用户分群     | K=2（高价值 / 普通）     |
+| ARIMA模型  | (2,0,2)，RMSE=7.60 |
+| 618大促提升  | +155.2%           |
+| 推荐策略     | 折扣优先于优惠券          |
 
-| 指标 | 值 |
-|:---|:---|
-| 浏览→购买转化率 | 11.30% |
-| 关联规则 | 144条 |
-| 用户分群 | K=2（高价值 / 普通） |
-| ARIMA | (2,0,2), RMSE=7.60 |
-| 618大促提升 | +155.2% |
-| 推荐策略 | 折扣 > 优惠券 |
+---
 
-## 文档
+## 📚 文档
 
-- [综合训练说明书](docs/training_report.md) — 含图表 + 代码附录
-- [分析汇总报告](output/analysis_report.md)
+* [综合训练说明书](docs/training_report.md)
+* [分析汇总报告](output/analysis_report.md)
 
-## License
+---
 
-[MIT](LICENSE) · [@longzheng268](https://github.com/longzheng268)
-]]>
+## 📜 License
+
+MIT License · © longzheng268
